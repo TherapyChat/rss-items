@@ -1,6 +1,6 @@
 {
   "name": "@therapychat/rss-items",
-  "version": "1.0.5",
+  "version": "0.0.1",
   "description": "Polymer element to show RSS items",
   "main": "rss-items.html",
   "scripts": {
