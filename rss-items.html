@@ -163,10 +163,10 @@ Custom property | Description | Default
       </a>
 
       <a href="[[item.url]]" title="[[item.title]]">
-        <h3 class="title"inner-h-t-m-l="[[_truncateText(item.title, maxTitleLength)]]"></h3>
+        <h3 class="title">[[_truncateText(item.title, maxTitleLength)]]</h3>
       </a>
 
-      <div class="excerpt" inner-h-t-m-l="[[_truncateText(item.excerpt, maxExcerptLength)]]"></div>
+      <div class="excerpt">[[_truncateText(item.excerpt, maxExcerptLength)]]</div>
 
       <template is="dom-if" if="[[showReadMore]]">
         <a href="[[item.url]]" class="read-more" title="[[readMoreAnchorTitle]][[item.title]]">[[readMoreAnchorText]]
