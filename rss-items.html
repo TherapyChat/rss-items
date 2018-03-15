@@ -158,18 +158,18 @@ Custom property | Description | Default
   <template is="dom-repeat" items="[[_items]]">
     <article>
 
-      <a class="thumbnail-container" href="[[item.url]]" title="[[item.title]]">
+      <a class="thumbnail-container" href="[[item.link]]" title="[[item.title]]">
         <iron-image class="thumbnail" src="[[item.imageSrc]]" alt="[[item.title]]" sizing="cover"></iron-image>
       </a>
 
-      <a href="[[item.url]]" title="[[item.title]]">
+      <a href="[[item.link]]" title="[[item.title]]">
         <h3 class="title">[[_truncateText(item.title, maxTitleLength)]]</h3>
       </a>
 
       <div class="excerpt">[[_truncateText(item.excerpt, maxExcerptLength)]]</div>
 
       <template is="dom-if" if="[[showReadMore]]">
-        <a href="[[item.url]]" class="read-more" title="[[readMoreAnchorTitle]][[item.title]]">[[readMoreAnchorText]]
+        <a href="[[item.link]]" class="read-more" title="[[readMoreAnchorTitle]][[item.title]]">[[readMoreAnchorText]]
           <img class="read-more-icon" src="/assets/images/icons/arrow-forward.svg" alt="[[readMoreImageAlt]]">
         </a>
       </template>
