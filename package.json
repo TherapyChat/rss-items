@@ -1,0 +1,47 @@
+{
+  "name": "@therapychat/rss-items",
+  "version": "1.0.5",
+  "description": "Polymer element to show RSS items",
+  "main": "rss-items.html",
+  "scripts": {
+    "build": "polymer build",
+    "lint": "eslint **/*.js **/*.html",
+    "start": "polymer serve",
+    "pretest": "npm run lint",
+    "test": "polymer test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TherapyChat/rss-items.git"
+  },
+  "keywords": [
+    "wordpress",
+    "posts",
+    "polymer",
+    "web-component",
+    "web-components",
+    "wp"
+  ],
+  "authors": [
+    "Therapychat <contacto@therapychat.com>",
+    "Alberto Fernandez <albertofdzm@gmail.com>",
+    "Miguel del Mazo <migueldelmazo@gmail.com>"
+  ],
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/TherapyChat/rss-items/issues"
+  },
+  "homepage": "https://github.com/TherapyChat/rss-items#readme",
+  "directories": {
+    "test": "test"
+  },
+  "devDependencies": {
+    "eslint": "^4.1.1",
+    "eslint-config-standard": "^10.2.1",
+    "eslint-plugin-html": "^3.0.0",
+    "eslint-plugin-import": "^2.6.1",
+    "eslint-plugin-node": "^5.1.0",
+    "eslint-plugin-promise": "^3.5.0",
+    "eslint-plugin-standard": "^3.0.1"
+  }
+}

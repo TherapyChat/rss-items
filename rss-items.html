@@ -1,0 +1,336 @@
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../iron-ajax/iron-ajax.html">
+<link rel="import" href="../iron-image/iron-image.html">
+<link rel="import" href="./x2js.html">
+<!--
+`rss-items`
+
+Example:
+```html
+<rss-items
+  url="https://wordpress.org/news"
+  max="4"
+></rss-items>
+```
+
+It will retrieve the items from the url automatically but can be trigger by calling `_getRss()`.
+
+### Styling
+
+The following custom properties and mixins are available for styling:
+
+Custom property | Description | Default
+----------------|-------------|----------
+`--rss-items` | Mixin applied to the component | `{}`
+`--rss-items-article` | Mixin applied to the articles | `{}`
+`--rss-items-article-mq-m-up` | Mixin applied to the articles on `min-width: 600px` | `{}`
+`--rss-items-article-mq-l-up` | Mixin applied to the articles on `min-width: 900px` | `{}`
+`--rss-items-thumbnail` | Mixin applied to the image thumbnails | `{}`
+`--rss-items-thumbnail-hover` | Mixin applied to the image thumbnails when hover | `{}`
+`--rss-items-thumbnail-container` | Mixin applied to the image thumbnails container | `{}`
+`--rss-items-title` | Mixin applied to the title | `{}`
+`--rss-items-excerpt` | Mixin applied to the excerpt | `{}`
+
+-->
+<dom-module id="rss-items">
+<template>
+
+  <style>
+    :host {
+      display: flex;
+      flex-wrap: wrap;
+      flex-direction: row;
+      align-items: flex-start;
+      justify-content: space-between;
+
+      @apply(--rss-items);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    h3,
+    p {
+      margin: 0;
+    }
+
+    a {
+      color: var(--primary-color, inherit);
+      text-decoration: none;
+    }
+
+    article {
+      margin-bottom: 2em;
+
+      @apply(--rss-items-article);
+    }
+
+    .thumbnail-container {
+      display: block;
+      overflow: hidden;
+      width: 100%;
+      height: 180px;
+
+      @apply(--rss-items-thumbnail-container);
+    }
+
+    .thumbnail {
+      width: 100%;
+      height: 100%;
+      transition: transform .5s ease-out;
+
+      @apply(--rss-items-thumbnail);
+    }
+
+    .thumbnail-container:hover .thumbnail,
+    .thumbnail-container:focus .thumbnail {
+      transform: scale3d(1.3, 1.3, 1);
+
+      @apply(--rss-items-thumbnail-hover);
+    }
+
+    .title {
+      min-height: 3em;
+      margin: 1em 0 .5em;
+
+      @apply(--rss-items-title);
+    }
+
+    .excerpt {
+      min-height: 6em;
+      margin: .5em 0 2em;
+
+      @apply(--rss-items-excerpt);
+    }
+
+    .read-more-icon {
+      width: 1.2em;
+      vertical-align: -.2em;
+      margin-left: .8em;
+    }
+
+    @media (max-width: 599px) {
+      .title,
+      .excerpt {
+        min-height: 0;
+      }
+    }
+
+    @media (min-width: 600px) {
+      article {
+        flex: 1 1 40%;
+        margin-right: 2em;
+
+        @apply(--rss-items-article-mq-m-up);
+      }
+
+      article:nth-of-type(2n),
+      article:last-of-type {
+        margin-right: 0;
+      }
+    }
+
+    @media (min-width: 900px) {
+      article {
+        flex: 1 1 30%;
+
+        @apply(--rss-items-article-mq-l-up);
+      }
+
+      article:nth-of-type(2n) {
+        margin-right: 2em;
+      }
+
+      article:nth-of-type(3n) {
+        margin-right: 0;
+      }
+    }
+  </style>
+
+  <iron-ajax
+    id="rssAjax"
+    url="[[url]]"
+    handle-as="xml"
+    on-response="_onRssResponse"
+  ></iron-ajax>
+
+  <template is="dom-repeat" items="[[_items]]">
+    <article>
+
+      <a class="thumbnail-container" href="[[item.url]]" title="[[item.title]]">
+        <iron-image class="thumbnail" src="[[item.imageSrc]]" alt="[[item.title]]" sizing="cover"></iron-image>
+      </a>
+
+      <a href="[[item.url]]" title="[[item.title]]">
+        <h3 class="title"inner-h-t-m-l="[[_truncateText(item.title, maxTitleLength)]]"></h3>
+      </a>
+
+      <div class="excerpt" inner-h-t-m-l="[[_truncateText(item.excerpt, maxExcerptLength)]]"></div>
+
+      <template is="dom-if" if="[[showReadMore]]">
+        <a href="[[item.url]]" class="read-more" title="[[readMoreAnchorTitle]][[item.title]]">[[readMoreAnchorText]]
+          <img class="read-more-icon" src="/assets/images/icons/arrow-forward.svg" alt="[[readMoreImageAlt]]">
+        </a>
+      </template>
+
+    </article>
+  </template>
+</template>
+<script>
+  /**
+   * `rss-items`
+   *
+   *
+   * @customElement
+   * @polymer
+   * @demo demo/index.html
+   */
+  Polymer({
+    is: 'rss-items',
+
+    properties: {
+      /**
+       * The URL of the RSS.
+       */
+      url: {
+        type: String
+      },
+      /**
+       * Max number of items to show.
+       */
+      max: {
+        type: Number,
+        value: 3
+      },
+      /**
+       * Max length for item titles. If the title exceeds this length it will be trimed and will have an ellipsis appended.
+       */
+      maxTitleLength: {
+        type: Number,
+        value: 50
+      },
+      /**
+       * Max length for item excerpts. If the excerpt exceeds this length it will be trimed and will have an ellipsis appended.
+       */
+      maxExcerptLength: {
+        type: Number,
+        value: 0
+      },
+      /**
+      * Read more anchor text.
+      */
+      readMoreAnchorText: {
+        type: Boolean,
+        value: 'Leer más'
+      },
+      /**
+      * Read more anchor title.
+      */
+      readMoreAnchorTitle: {
+        type: Boolean,
+        value: 'Leer más sobre: '
+      },
+      /**
+      * Read more image alternative text.
+      */
+      readMoreImageAlt: {
+        type: Boolean,
+        value: 'Icono de flecha'
+      },
+      /**
+       * If true the items elements will display a read more link.
+       */
+      showReadMore: {
+        type: Boolean,
+        value: false
+      },
+      /**
+       * The retrieved items array.
+       */
+      _items: {
+        type: Array,
+        notify: true
+      }
+    },
+
+    ready: function () {
+      this._getRss()
+    },
+
+    /**
+     * Init ajax request to get rss
+     */
+    _getRss: function () {
+      this.$.rssAjax.generateRequest()
+    },
+
+    /**
+     * Ajax request callback. Get RSS and parse its items in an array.
+     * @param {Object} ev Iron ajax event.
+     * @param {Object} detail Iron ajax detail.
+     */
+    _onRssResponse: function (ev, detail) {
+      // parse xml to json and get items
+      var rssJson = this._xml2json(detail.response)
+      var items = rssJson.rss.channel.item
+      // truncate and parse items
+      items = items.splice(0, this.max)
+      this._items = this._parseItems(items)
+    },
+
+    /**
+     * XML to JSON parser.
+     * @param {Element} xml xml DOM element.
+     */
+    _xml2json: function (xml) {
+      var conversor = new X2JS()
+      return conversor.xml2json(xml)
+    },
+
+    /**
+     * Parse an RSS by getting excerpt and image source.
+     * @param {Array} items RSS items.
+     */
+    _parseItems: function (items) {
+      return items.map(function (item) {
+        item.excerpt = this._getItemExcerpt(item.description)
+        item.imageSrc = this._getItemImageScr(item.description)
+        return item
+      }.bind(this))
+    },
+
+    /**
+     * Get excerpt from RSS item description.
+     * @param {String} html HTML code where find excerpt.
+     */
+    _getItemExcerpt: function (html) {
+      var element = document.createElement('div')
+      element.innerHTML = html
+      return element.textContent.trim()
+    },
+
+    /**
+     * Get image source from RSS item description.
+     * @param {String} html HTML code where find image.
+     */
+    _getItemImageScr: function (html) {
+      var element = document.createElement('div')
+      element.innerHTML = html
+      var image = element.querySelector('img') || {}
+      return image.src || ''
+    },
+
+    /**
+     * Truncate a text.
+     * @param {String} text Text to truncate.
+     * @param {Number} maxLength Max length of the text.
+     */
+    _truncateText: function (text, maxLength) {
+      return maxLength && text.length > maxLength
+        ? text.substr(0, maxLength) + '...'
+        : text
+    }
+  })
+</script>
+</dom-module>
