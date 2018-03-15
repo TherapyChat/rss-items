@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
+
+    <title> test</title>
+
+    <script src="../bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+    <script src="../bower_components/web-component-tester/browser.js"></script>
+
+    <link rel="import" href="../rss-items.html">
+  </head>
+  <body>
+    <test-fixture id="basic">
+      <template>
+        <rss-items></rss-items>
+      </template>
+    </test-fixture>
+
+    <script>
+      suite('rss-items', function () {
+        test('instantiating the element works', function () {
+          var element = fixture('basic')
+          assert.equal(element.is, 'rss-items')
+        })
+      })
+
+      suite('receiving items response', function () {
+        var element
+        var spy
+        var eventDetail =
+          '<rss>' +
+            '<channel>' +
+              '<item>' +
+                '<title>Title</title>' +
+                '<link>https://link.com</link>' +
+                '<description>' +
+                  '<img src="https://image.com">' +
+                  '<p>Description.</p>' +
+                '</description>' +
+              '</item>' +
+            '</channel>' +
+          '</rss>'
+
+        setup(function () {
+          element = fixture('basic')
+          spy = sinon.spy()
+        })
+
+        test('fires items-changed event', function () {
+          element.addEventListener('items-changed', spy)
+          element._onRssResponse(null, eventDetail)
+          console.log(element.items);
+          assert(spy.calledOnce)
+          assert.lengthOf(spy.lastCall.args[0].detail.value, 1)
+        })
+      })
+    </script>
+  </body>
+</html>

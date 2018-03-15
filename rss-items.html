@@ -155,7 +155,7 @@ Custom property | Description | Default
     on-response="_onRssResponse"
   ></iron-ajax>
 
-  <template is="dom-repeat" items="[[_items]]">
+  <template is="dom-repeat" items="[[items]]">
     <article>
 
       <a class="thumbnail-container" href="[[item.link]]" title="[[item.title]]">
@@ -248,7 +248,7 @@ Custom property | Description | Default
       /**
        * The retrieved items array.
        */
-      _items: {
+      items: {
         type: Array,
         notify: true
       }
@@ -276,7 +276,7 @@ Custom property | Description | Default
       var items = rssJson.rss.channel.item
       // truncate and parse items
       items = items.splice(0, this.max)
-      this._items = this._parseItems(items)
+      this.items = this._parseItems(items)
     },
 
     /**
