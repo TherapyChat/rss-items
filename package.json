@@ -4,6 +4,7 @@
   "description": "Polymer element to show RSS items",
   "main": "rss-items.html",
   "scripts": {
+    "analysis": "polymer analyze > analysis.json",
     "build": "polymer build",
     "lint": "eslint **/*.js **/*.html",
     "start": "polymer serve",

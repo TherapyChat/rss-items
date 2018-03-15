@@ -1,0 +1,533 @@
+{
+  "schema_version": "1.0.0",
+  "elements": [
+    {
+      "description": "`rss-items`\n\nExample:\n```html\n<rss-items\n  url=\"https://content.therapychat.com/rss.xml\"\n  max=\"4\"\n></rss-items>\n```\n\nIt will retrieve the items from the url automatically but can be trigger by calling `_getRss()`.\n\n### Styling\n\nThe following custom properties and mixins are available for styling:\n\nCustom property | Description | Default\n----------------|-------------|----------\n`--rss-items` | Mixin applied to the component | `{}`\n`--rss-items-article` | Mixin applied to the articles | `{}`\n`--rss-items-article-mq-m-up` | Mixin applied to the articles on `min-width: 600px` | `{}`\n`--rss-items-article-mq-l-up` | Mixin applied to the articles on `min-width: 900px` | `{}`\n`--rss-items-thumbnail` | Mixin applied to the image thumbnails | `{}`\n`--rss-items-thumbnail-hover` | Mixin applied to the image thumbnails when hover | `{}`\n`--rss-items-thumbnail-container` | Mixin applied to the image thumbnails container | `{}`\n`--rss-items-title` | Mixin applied to the title | `{}`\n`--rss-items-excerpt` | Mixin applied to the excerpt | `{}`\n\n`rss-items`",
+      "summary": "",
+      "path": "rss-items.html",
+      "properties": [
+        {
+          "name": "url",
+          "type": "string",
+          "description": "The URL of the RSS.",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 195,
+              "column": 6
+            },
+            "end": {
+              "line": 197,
+              "column": 7
+            }
+          },
+          "metadata": {
+            "polymer": {}
+          }
+        },
+        {
+          "name": "max",
+          "type": "number",
+          "description": "Max number of items to show.",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 201,
+              "column": 6
+            },
+            "end": {
+              "line": 204,
+              "column": 7
+            }
+          },
+          "metadata": {
+            "polymer": {}
+          },
+          "defaultValue": "3"
+        },
+        {
+          "name": "maxTitleLength",
+          "type": "number",
+          "description": "Max length for item titles. If the title exceeds this length it will be trimed and will have an ellipsis appended.",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 208,
+              "column": 6
+            },
+            "end": {
+              "line": 211,
+              "column": 7
+            }
+          },
+          "metadata": {
+            "polymer": {}
+          },
+          "defaultValue": "50"
+        },
+        {
+          "name": "maxExcerptLength",
+          "type": "number",
+          "description": "Max length for item excerpts. If the excerpt exceeds this length it will be trimed and will have an ellipsis appended.",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 215,
+              "column": 6
+            },
+            "end": {
+              "line": 218,
+              "column": 7
+            }
+          },
+          "metadata": {
+            "polymer": {}
+          },
+          "defaultValue": "100"
+        },
+        {
+          "name": "readMoreAnchorText",
+          "type": "boolean",
+          "description": "Read more anchor text.",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 222,
+              "column": 6
+            },
+            "end": {
+              "line": 225,
+              "column": 7
+            }
+          },
+          "metadata": {
+            "polymer": {}
+          },
+          "defaultValue": "\"Leer más\""
+        },
+        {
+          "name": "readMoreAnchorTitle",
+          "type": "boolean",
+          "description": "Read more anchor title.",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 229,
+              "column": 6
+            },
+            "end": {
+              "line": 232,
+              "column": 7
+            }
+          },
+          "metadata": {
+            "polymer": {}
+          },
+          "defaultValue": "\"Leer más sobre: \""
+        },
+        {
+          "name": "readMoreImageAlt",
+          "type": "boolean",
+          "description": "Read more image alternative text.",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 236,
+              "column": 6
+            },
+            "end": {
+              "line": 239,
+              "column": 7
+            }
+          },
+          "metadata": {
+            "polymer": {}
+          },
+          "defaultValue": "\"Icono de flecha\""
+        },
+        {
+          "name": "showReadMore",
+          "type": "boolean",
+          "description": "If true the items elements will display a read more link.",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 243,
+              "column": 6
+            },
+            "end": {
+              "line": 246,
+              "column": 7
+            }
+          },
+          "metadata": {
+            "polymer": {}
+          },
+          "defaultValue": "false"
+        },
+        {
+          "name": "_items",
+          "type": "Array",
+          "description": "The retrieved items array.",
+          "privacy": "protected",
+          "sourceRange": {
+            "start": {
+              "line": 250,
+              "column": 6
+            },
+            "end": {
+              "line": 253,
+              "column": 7
+            }
+          },
+          "metadata": {
+            "polymer": {
+              "notify": true
+            }
+          }
+        }
+      ],
+      "methods": [
+        {
+          "name": "ready",
+          "description": "",
+          "privacy": "protected",
+          "sourceRange": {
+            "start": {
+              "line": 256,
+              "column": 4
+            },
+            "end": {
+              "line": 258,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": []
+        },
+        {
+          "name": "_getRss",
+          "description": "Init ajax request to get rss",
+          "privacy": "protected",
+          "sourceRange": {
+            "start": {
+              "line": 263,
+              "column": 4
+            },
+            "end": {
+              "line": 265,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": []
+        },
+        {
+          "name": "_onRssResponse",
+          "description": "Ajax request callback. Get RSS and parse its items in an array.",
+          "privacy": "protected",
+          "sourceRange": {
+            "start": {
+              "line": 272,
+              "column": 4
+            },
+            "end": {
+              "line": 279,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "ev",
+              "type": "Object",
+              "description": "Iron ajax event."
+            },
+            {
+              "name": "detail",
+              "type": "Object",
+              "description": "Iron ajax detail."
+            }
+          ]
+        },
+        {
+          "name": "_xml2json",
+          "description": "XML to JSON parser.",
+          "privacy": "protected",
+          "sourceRange": {
+            "start": {
+              "line": 285,
+              "column": 4
+            },
+            "end": {
+              "line": 288,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "xml",
+              "type": "Element",
+              "description": "xml DOM element."
+            }
+          ]
+        },
+        {
+          "name": "_parseItems",
+          "description": "Parse an RSS by getting excerpt and image source.",
+          "privacy": "protected",
+          "sourceRange": {
+            "start": {
+              "line": 294,
+              "column": 4
+            },
+            "end": {
+              "line": 300,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "items",
+              "type": "Array",
+              "description": "RSS items."
+            }
+          ]
+        },
+        {
+          "name": "_getItemExcerpt",
+          "description": "Get excerpt from RSS item description.",
+          "privacy": "protected",
+          "sourceRange": {
+            "start": {
+              "line": 306,
+              "column": 4
+            },
+            "end": {
+              "line": 310,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "html",
+              "type": "String",
+              "description": "HTML code where find excerpt."
+            }
+          ]
+        },
+        {
+          "name": "_getItemImageScr",
+          "description": "Get image source from RSS item description.",
+          "privacy": "protected",
+          "sourceRange": {
+            "start": {
+              "line": 316,
+              "column": 4
+            },
+            "end": {
+              "line": 321,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "html",
+              "type": "String",
+              "description": "HTML code where find image."
+            }
+          ]
+        },
+        {
+          "name": "_truncateText",
+          "description": "Truncate a text.",
+          "privacy": "protected",
+          "sourceRange": {
+            "start": {
+              "line": 328,
+              "column": 4
+            },
+            "end": {
+              "line": 332,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "text",
+              "type": "String",
+              "description": "Text to truncate."
+            },
+            {
+              "name": "maxLength",
+              "type": "Number",
+              "description": "Max length of the text."
+            }
+          ]
+        }
+      ],
+      "staticMethods": [],
+      "demos": [
+        {
+          "url": "demo/index.html",
+          "description": ""
+        }
+      ],
+      "metadata": {},
+      "sourceRange": {
+        "start": {
+          "line": 188,
+          "column": 10
+        },
+        "end": {
+          "line": 333,
+          "column": 3
+        }
+      },
+      "privacy": "public",
+      "superclass": "HTMLElement",
+      "attributes": [
+        {
+          "name": "url",
+          "description": "The URL of the RSS.",
+          "sourceRange": {
+            "start": {
+              "line": 195,
+              "column": 6
+            },
+            "end": {
+              "line": 197,
+              "column": 7
+            }
+          },
+          "metadata": {},
+          "type": "string"
+        },
+        {
+          "name": "max",
+          "description": "Max number of items to show.",
+          "sourceRange": {
+            "start": {
+              "line": 201,
+              "column": 6
+            },
+            "end": {
+              "line": 204,
+              "column": 7
+            }
+          },
+          "metadata": {},
+          "type": "number"
+        },
+        {
+          "name": "max-title-length",
+          "description": "Max length for item titles. If the title exceeds this length it will be trimed and will have an ellipsis appended.",
+          "sourceRange": {
+            "start": {
+              "line": 208,
+              "column": 6
+            },
+            "end": {
+              "line": 211,
+              "column": 7
+            }
+          },
+          "metadata": {},
+          "type": "number"
+        },
+        {
+          "name": "max-excerpt-length",
+          "description": "Max length for item excerpts. If the excerpt exceeds this length it will be trimed and will have an ellipsis appended.",
+          "sourceRange": {
+            "start": {
+              "line": 215,
+              "column": 6
+            },
+            "end": {
+              "line": 218,
+              "column": 7
+            }
+          },
+          "metadata": {},
+          "type": "number"
+        },
+        {
+          "name": "read-more-anchor-text",
+          "description": "Read more anchor text.",
+          "sourceRange": {
+            "start": {
+              "line": 222,
+              "column": 6
+            },
+            "end": {
+              "line": 225,
+              "column": 7
+            }
+          },
+          "metadata": {},
+          "type": "boolean"
+        },
+        {
+          "name": "read-more-anchor-title",
+          "description": "Read more anchor title.",
+          "sourceRange": {
+            "start": {
+              "line": 229,
+              "column": 6
+            },
+            "end": {
+              "line": 232,
+              "column": 7
+            }
+          },
+          "metadata": {},
+          "type": "boolean"
+        },
+        {
+          "name": "read-more-image-alt",
+          "description": "Read more image alternative text.",
+          "sourceRange": {
+            "start": {
+              "line": 236,
+              "column": 6
+            },
+            "end": {
+              "line": 239,
+              "column": 7
+            }
+          },
+          "metadata": {},
+          "type": "boolean"
+        },
+        {
+          "name": "show-read-more",
+          "description": "If true the items elements will display a read more link.",
+          "sourceRange": {
+            "start": {
+              "line": 243,
+              "column": 6
+            },
+            "end": {
+              "line": 246,
+              "column": 7
+            }
+          },
+          "metadata": {},
+          "type": "boolean"
+        }
+      ],
+      "events": [],
+      "styling": {
+        "cssVariables": [],
+        "selectors": []
+      },
+      "slots": [],
+      "tagname": "rss-items"
+    }
+  ]
+}
