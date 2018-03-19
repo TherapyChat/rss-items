@@ -4,17 +4,30 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
 
-    <title> test</title>
+    <title>rss-items test</title>
 
     <script src="../bower_components/webcomponentsjs/webcomponents-lite.js"></script>
     <script src="../bower_components/web-component-tester/browser.js"></script>
 
-    <link rel="import" href="../rss-items.html">
+    <link rel="import" href="../bower_components/rss-items/rss-items.html">
   </head>
   <body>
+
     <test-fixture id="basic">
       <template>
         <rss-items></rss-items>
+      </template>
+    </test-fixture>
+
+    <test-fixture id="custom-xml">
+      <template>
+        <rss-items url="./rss.xml" max="2" auto></rss-items>
+      </template>
+    </test-fixture>
+
+    <test-fixture id="therapychat-xml">
+      <template>
+        <rss-items url="https://content.therapychat.com/rss.xml" auto></rss-items>
       </template>
     </test-fixture>
 
@@ -26,34 +39,72 @@
         })
       })
 
-      suite('receiving items response', function () {
+      suite('receiving items response from custom xml', function () {
         var element
         var spy
-        var eventDetail =
-          '<rss>' +
-            '<channel>' +
-              '<item>' +
-                '<title>Title</title>' +
-                '<link>https://link.com</link>' +
-                '<description>' +
-                  '<img src="https://image.com">' +
-                  '<p>Description.</p>' +
-                '</description>' +
-              '</item>' +
-            '</channel>' +
-          '</rss>'
 
         setup(function () {
-          element = fixture('basic')
+          element = fixture('custom-xml')
           spy = sinon.spy()
         })
 
-        test('fires items-changed event', function () {
+        test('fires items-changed event', function (done) {
           element.addEventListener('items-changed', spy)
-          element._onRssResponse(null, eventDetail)
-          console.log(element.items);
-          assert(spy.calledOnce)
-          assert.lengthOf(spy.lastCall.args[0].detail.value, 1)
+          element.addEventListener('items-changed', function () {
+            assert(spy.calledOnce)
+            assert.lengthOf(spy.lastCall.args[0].detail.value, 2)
+            done()
+          })
+        })
+
+        test('checks parsed items length', function (done) {
+          element.addEventListener('items-changed', function () {
+            assert.equal(element.items.length, 2)
+            done()
+          })
+        })
+
+        test('checks parsed items values', function (done) {
+          element.addEventListener('items-changed', function () {
+            element.items.forEach(function (item) {
+              assert.isString(item.excerpt)
+              assert.isString(item.title)
+              assert.isString(item.imageSrc)
+              assert.isString(item.link)
+              assert.isAbove(item.excerpt.length, 1)
+              assert.isAbove(item.title.length, 1)
+              assert.isAbove(item.imageSrc.length, 1)
+              assert.isAbove(item.link.length, 1)
+            })
+            done()
+          })
+        })
+      })
+
+      suite('receiving items response from therapychat xml', function () {
+        var element
+
+        setup(function () {
+          element = fixture('therapychat-xml')
+        })
+
+        test('check parsed items length', function (done) {
+          element.addEventListener('items-changed', function () {
+            element.items.forEach(function (item) {
+              assert.isString(item.author)
+              assert.isString(item.category)
+              assert.isString(item.date.toString())
+              assert.isString(item.date.__text)
+              assert.isString(item.description)
+              assert.isString(item.excerpt)
+              assert.isString(item.guid)
+              assert.isString(item.imageSrc)
+              assert.isString(item.link)
+              assert.isString(item.pubDate)
+              assert.isString(item.title)
+            })
+            done()
+          })
         })
       })
     </script>
