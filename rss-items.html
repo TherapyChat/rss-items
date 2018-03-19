@@ -206,11 +206,10 @@ Custom property | Description | Default
         notify: true
       },
       /**
-       * Max number of items to show.
+       * Max number of items to show. If it is undefined shows all items.
        */
       max: {
-        type: Number,
-        value: 3
+        type: Number
       },
       /**
       * Max length for item excerpts. If the excerpt exceeds this length it will be trimed and will have an ellipsis appended.
@@ -275,20 +274,20 @@ Custom property | Description | Default
      * @param {Object} detail Iron ajax detail.
      */
     _onRssResponse: function (ev, detail) {
-      this._xmlStrToItems(detail.response.documentElement.innerHTML)
+      this.xmlToItems(detail.response.documentElement)
     },
 
     /**
-     * Receives a xml as string and set this.items as json
-     * @param {Object} xmlStr String sml.
+     * Receives a xml and set this.items as json.
+     * @param {Object} xml XML element.
      */
-    _xmlStrToItems: function (xmlStr) {
+    xmlToItems: function (xml) {
       // parse xml to json and get items
       var conversor = new X2JS()
-      var json = conversor.xml_str2json(xmlStr)
-      var items = json.channel.item
+      var json = conversor.xml2json(xml)
+      var items = json.rss ? json.rss.channel.item : json.channel.item
       // truncate with this.max and parse items
-      items = items.splice(0, this.max)
+      items = this.max === undefined ? items : items.splice(0, this.max)
       this.items = this._parseItems(items)
     },
 
@@ -298,37 +297,42 @@ Custom property | Description | Default
      */
     _parseItems: function (items) {
       return items.map(function (item) {
-        item.excerpt = this._getItemExcerpt(item.description)
-        item.imageSrc = this._getItemImageScr(item.description)
+        item.excerpt = this._getItemExcerpt(item)
+        item.imageSrc = this._getItemImageScr(item)
         return item
       }.bind(this))
     },
 
     /**
      * Get excerpt from item description.
-     * @param {String} html HTML code where find excerpt.
+     * @param {Object} item Item where find excerpt.
      */
-    _getItemExcerpt: function (html) {
+    _getItemExcerpt: function (item) {
       var element = document.createElement('div')
-      element.innerHTML = html
+      element.innerHTML = item.description
       return element.textContent.trim()
     },
 
     /**
      * Get image source from item description.
-     * @param {String} html HTML code where find image.
+     * @param {Object} item Item where find image.
      */
-    _getItemImageScr: function (html) {
-      var element = document.createElement('div')
-      element.innerHTML = html
-      var image = element.querySelector('img') || {}
-      return image.src || ''
+    _getItemImageScr: function (item) {
+      if (item.thumbnail && item.thumbnail._url) {
+        return item.thumbnail._url
+      } else {
+        var element = document.createElement('div')
+        element.innerHTML = item.description
+        var image = element.querySelector('img') || {}
+        return image.src || ''
+      }
     },
 
     /**
-     * Truncate a text.
+     * Truncate a text and concatenate with ellipsis if needed.
      * @param {String} text Text to truncate.
      * @param {Number} maxLength Max length of the text.
+     * @return {String} Truncated text.
      */
     _truncateText: function (text, maxLength) {
       return maxLength && text.length > maxLength
