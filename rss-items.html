@@ -10,10 +10,11 @@ Example:
 <rss-items
   url="https://content.therapychat.com/rss.xml"
   max="4"
+  auto
 ></rss-items>
 ```
 
-It will retrieve the items from the url automatically but can be trigger by calling `_getRss()`.
+It will retrieve the items from the url automatically.
 
 ### Styling
 
@@ -43,7 +44,7 @@ Custom property | Description | Default
       align-items: flex-start;
       justify-content: space-between;
 
-      @apply(--rss-items);
+      @apply --rss-items;
     }
 
     * {
@@ -63,7 +64,7 @@ Custom property | Description | Default
     article {
       margin-bottom: 2em;
 
-      @apply(--rss-items-article);
+      @apply --rss-items-article;
     }
 
     .thumbnail-container {
@@ -72,7 +73,7 @@ Custom property | Description | Default
       width: 100%;
       height: 180px;
 
-      @apply(--rss-items-thumbnail-container);
+      @apply --rss-items-thumbnail-container;
     }
 
     .thumbnail {
@@ -80,28 +81,28 @@ Custom property | Description | Default
       height: 100%;
       transition: transform .5s ease-out;
 
-      @apply(--rss-items-thumbnail);
+      @apply --rss-items-thumbnail;
     }
 
     .thumbnail-container:hover .thumbnail,
     .thumbnail-container:focus .thumbnail {
       transform: scale3d(1.3, 1.3, 1);
 
-      @apply(--rss-items-thumbnail-hover);
+      @apply --rss-items-thumbnail-hover;
     }
 
     .title {
       min-height: 3em;
       margin: 1em 0 .5em;
 
-      @apply(--rss-items-title);
+      @apply --rss-items-title;
     }
 
     .excerpt {
       min-height: 6em;
       margin: .5em 0 2em;
 
-      @apply(--rss-items-excerpt);
+      @apply --rss-items-excerpt;
     }
 
     .read-more-icon {
@@ -122,7 +123,7 @@ Custom property | Description | Default
         flex: 1 1 40%;
         margin-right: 2em;
 
-        @apply(--rss-items-article-mq-m-up);
+        @apply --rss-items-article-mq-m-up;
       }
 
       article:nth-of-type(2n),
@@ -135,7 +136,7 @@ Custom property | Description | Default
       article {
         flex: 1 1 30%;
 
-        @apply(--rss-items-article-mq-l-up);
+        @apply --rss-items-article-mq-l-up;
       }
 
       article:nth-of-type(2n) {
@@ -153,6 +154,7 @@ Custom property | Description | Default
     url="[[url]]"
     handle-as="xml"
     on-response="_onRssResponse"
+    auto="[[auto]]"
   ></iron-ajax>
 
   <template is="dom-repeat" items="[[items]]">
@@ -170,7 +172,7 @@ Custom property | Description | Default
 
       <template is="dom-if" if="[[showReadMore]]">
         <a href="[[item.link]]" class="read-more" title="[[readMoreAnchorTitle]][[item.title]]">[[readMoreAnchorText]]
-          <img class="read-more-icon" src="/assets/images/icons/arrow-forward.svg" alt="[[readMoreImageAlt]]">
+          <img class="read-more-icon" src="./images/arrow-forward.svg" alt="[[readMoreImageAlt]]">
         </a>
       </template>
 
@@ -181,7 +183,6 @@ Custom property | Description | Default
   /**
    * `rss-items`
    *
-   *
    * @customElement
    * @polymer
    * @demo demo/index.html
@@ -191,10 +192,18 @@ Custom property | Description | Default
 
     properties: {
       /**
-       * The URL of the RSS.
+       * If true init rss request.
        */
-      url: {
-        type: String
+      auto: {
+        type: Boolean,
+        value: false
+      },
+      /**
+       * The retrieved items array.
+       */
+      items: {
+        type: Array,
+        notify: true
       },
       /**
        * Max number of items to show.
@@ -204,18 +213,18 @@ Custom property | Description | Default
         value: 3
       },
       /**
+      * Max length for item excerpts. If the excerpt exceeds this length it will be trimed and will have an ellipsis appended.
+      */
+      maxExcerptLength: {
+        type: Number,
+        value: 100
+      },
+      /**
        * Max length for item titles. If the title exceeds this length it will be trimed and will have an ellipsis appended.
        */
       maxTitleLength: {
         type: Number,
         value: 50
-      },
-      /**
-       * Max length for item excerpts. If the excerpt exceeds this length it will be trimed and will have an ellipsis appended.
-       */
-      maxExcerptLength: {
-        type: Number,
-        value: 100
       },
       /**
       * Read more anchor text.
@@ -246,22 +255,17 @@ Custom property | Description | Default
         value: false
       },
       /**
-       * The retrieved items array.
+       * The URL of the RSS.
        */
-      items: {
-        type: Array,
-        notify: true
+      url: {
+        type: String
       }
     },
 
-    ready: function () {
-      this._getRss()
-    },
-
     /**
-     * Init ajax request to get rss
+     * Init ajax request to get rss.
      */
-    _getRss: function () {
+    initRequest: function () {
       this.$.rssAjax.generateRequest()
     },
 
@@ -271,25 +275,25 @@ Custom property | Description | Default
      * @param {Object} detail Iron ajax detail.
      */
     _onRssResponse: function (ev, detail) {
+      this._xmlStrToItems(detail.response.documentElement.innerHTML)
+    },
+
+    /**
+     * Receives a xml as string and set this.items as json
+     * @param {Object} xmlStr String sml.
+     */
+    _xmlStrToItems: function (xmlStr) {
       // parse xml to json and get items
-      var rssJson = this._xml2json(detail.response)
-      var items = rssJson.rss.channel.item
-      // truncate and parse items
+      var conversor = new X2JS()
+      var json = conversor.xml_str2json(xmlStr)
+      var items = json.channel.item
+      // truncate with this.max and parse items
       items = items.splice(0, this.max)
       this.items = this._parseItems(items)
     },
 
     /**
-     * XML to JSON parser.
-     * @param {Element} xml xml DOM element.
-     */
-    _xml2json: function (xml) {
-      var conversor = new X2JS()
-      return conversor.xml2json(xml)
-    },
-
-    /**
-     * Parse an RSS by getting excerpt and image source.
+     * Parse items by getting excerpt and image source.
      * @param {Array} items RSS items.
      */
     _parseItems: function (items) {
@@ -301,7 +305,7 @@ Custom property | Description | Default
     },
 
     /**
-     * Get excerpt from RSS item description.
+     * Get excerpt from item description.
      * @param {String} html HTML code where find excerpt.
      */
     _getItemExcerpt: function (html) {
@@ -311,7 +315,7 @@ Custom property | Description | Default
     },
 
     /**
-     * Get image source from RSS item description.
+     * Get image source from item description.
      * @param {String} html HTML code where find image.
      */
     _getItemImageScr: function (html) {
