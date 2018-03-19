@@ -7,7 +7,7 @@
     "analysis": "polymer analyze > analysis.json",
     "build": "polymer build",
     "lint": "eslint **/*.js **/*.html",
-    "start": "polymer serve",
+    "start": "polymer serve -P h2 -o --open-path demo",
     "pretest": "npm run lint",
     "test": "polymer test"
   },
@@ -26,7 +26,8 @@
   "authors": [
     "Therapychat <contacto@therapychat.com>",
     "Alberto Fernandez <albertofdzm@gmail.com>",
-    "Miguel del Mazo <migueldelmazo@gmail.com>"
+    "Miguel del Mazo <migueldelmazo@gmail.com>",
+    "Rafa García <rafagarcia@gmail.com>"
   ],
   "license": "Apache-2.0",
   "bugs": {
