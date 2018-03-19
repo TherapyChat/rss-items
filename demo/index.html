@@ -18,48 +18,28 @@
   <body>
     <div class="vertical-section-container centered">
 
-      <h3>Basic rss-items demo</h3>
+      <h3>rss-items demo: basic</h3>
+
+      <demo-snippet>
+        <template>
+          <rss-items url="./rss.xml" auto></rss-items>
+        </template>
+      </demo-snippet>
+
+      <h3>rss-items demo: max items</h3>
+
+      <demo-snippet>
+        <template>
+          <rss-items url="./rss.xml" max="2" auto></rss-items>
+        </template>
+      </demo-snippet>
+
+      <h3>rss-items demo: max items</h3>
 
       <demo-snippet>
         <template>
           <rss-items url="https://content.therapychat.com/rss.xml" max="3" auto></rss-items>
         </template>
-      </demo-snippet>
-
-      <h3>Basic rss-items demo</h3>
-
-      <demo-snippet>
-        <template>
-          <rss-items id="rssItems"></rss-items>
-
-          <rss id="rssElement" style="display: none">
-            <channel>
-              <item>
-                <title>Upcoming Eclipse</title>
-                <link>http://liftoff.example.net/2003/05/30/eclipse</link>
-                <description>Sky watchers in Europe, Asia, and parts of Alaska and Canada will experience a partial eclipse of the Sun on Saturday, May 31st.</description>
-                <pubDate>Fri, 30 May 2003 11:06:42 GMT</pubDate>
-                <guid>http://liftoff.example.net/2003/05/30/eclipse</guid>
-                <thumbnail url="https://picsum.photos/200/300"></thumbnail>
-              </item>
-              <item>
-                <title>The Engine That Does More</title>
-                <link>http://liftoff.example.net/2003/05/27/vasmir</link>
-                <description>Before man travels to Mars, NASA hopes to design new engines that will let us fly through the Solar System more quickly.  The proposed VASIMR engine would do that.</description>
-                <pubDate>Tue, 27 May 2003 08:37:32 GMT</pubDate>
-                <guid>http://liftoff.example.net/2003/05/27/vasmir</guid>
-                <thumbnail url="https://picsum.photos/300/200"></thumbnail>
-              </item>
-            </channel>
-          </rss>
-
-          <script>
-            var rssElement = document.querySelector('#rssElement')
-            var rssItems = document.querySelector('#rssItems')
-            rssItems.xmlToItems(rssElement)
-          </script>
-        </template>
-
       </demo-snippet>
     </div>
   </body>

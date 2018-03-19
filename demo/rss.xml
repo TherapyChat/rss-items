@@ -1,0 +1,22 @@
+<rss>
+  <channel>
+    <item>
+      <title>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua</title>
+      <link>https://www.google.com/search?q=lorem</link>
+      <description>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</description>
+      <thumbnail url="https://picsum.photos/100/100"></thumbnail>
+    </item>
+    <item>
+      <title>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</title>
+      <link>https://www.google.com/search?q=Duis</link>
+      <description>Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</description>
+      <thumbnail url="https://picsum.photos/200/200"></thumbnail>
+    </item>
+    <item>
+      <title>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.</title>
+      <link>https://www.google.com/search?q=Sed</link>
+      <description>Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt.</description>
+      <thumbnail url="https://picsum.photos/300/300"></thumbnail>
+    </item>
+  </channel>
+</rss>
